@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body { margin: 0 }
+      canvas { 
+      	width:100%;
+      	height:100%;
+        position:absolute; 
+      }
+    </style>  
+  </head>
+  <body>
+    <canvas id="gl"></canvas>
+    <canvas id="texture"></canvas>
+    <script id='vertex' type='x-shader/x-vertex'>
+      attribute vec2 aPosition;
+      attribute vec2 aTextureCoord;
+
+      varying vec2 vTexCoord;
+
+      void main(){
+        vTexCoord = aTextureCoord;
+        gl_Position = vec4(aPosition,0,1);
+      }
+    </script>
+  </body>
+  <script src='./js/index.js'></script>
+</html>
