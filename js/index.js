@@ -1,4 +1,4 @@
-      let vertexShader = glslify('./frag.glsl')
+     //let vertexShader = glslify('./frag.glsl')
 
       let mouseDown = false
       let running = true
@@ -132,8 +132,8 @@
 
         render();
        //window.requestAnimationFrame( draw )
-      }
-    }
+      })
+    
 
 
       let numLiveNeighboors = function(y , x) {
@@ -157,7 +157,6 @@
       }
 
       //console.log(numLiveNeighboors(1,1))
-
 
       let addCell = function(x,y){
         //console.log("Creating a live cell at: " + x + "," + y)

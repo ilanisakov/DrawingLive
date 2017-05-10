@@ -10,18 +10,39 @@ var gulp = require('gulp'),
 gulp.task( 'default', function() {
   
   var b = browserify({
-    entries:'./js/index.js'
+    entries:'./js/index.js',
+    transforms:['glslify']
   })
 
   // bundles files and
   // converts results to stream object  
   b.bundle()
     // converts to vinyl stream
+    .pipe( notify({
+      message: 'begin.',
+      onLast:true
+    }) )
     .pipe( source( 'app.js' ) )
+    .pipe( notify({
+      message: 'app.js build complete.',
+      onLast:true
+    }) )
     // buffer entire vinyl object
     .pipe( buffer() )
+    .pipe( notify({
+      message: 'buffer complete.',
+      onLast:true
+    }) )
     .pipe( babel({ presets:['es2015'] }) )
+    .pipe( notify({
+      message: 'babel complete.',
+      onLast:true
+    }) )
     .pipe( uglify() )
+    .pipe( notify({
+      message: 'uglify complete.',
+      onLast:true
+    }) )
     .pipe( gulp.dest('./dist') )
     .pipe( notify({
       message: 'build complete.',
