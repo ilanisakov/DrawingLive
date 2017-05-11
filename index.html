@@ -13,17 +13,119 @@
   <body>
     <canvas id="gl"></canvas>
     <canvas id="texture"></canvas>
-    <script id='vertex' type='x-shader/x-vertex'>
-      attribute vec2 aPosition;
-      attribute vec2 aTextureCoord;
-
-      varying vec2 vTexCoord;
-
-      void main(){
-        vTexCoord = aTextureCoord;
-        gl_Position = vec4(aPosition,0,1);
-      }
-    </script>
   </body>
   <script src='./js/index.js'></script>
+  <script type='x-shader/x-vertex' id='vertex'>
+    attribute vec2 aPosition;
+    attribute vec2 aTextureCoord;
+
+    varying vec2 vTexCoord;
+
+    void main(){
+      vTexCoord = aTextureCoord;
+      gl_Position = vec4(aPosition,0,1);
+    }
+  </script>
+  <script type='x-shader/x-fragment' id='fragment'>
+      precision mediump float;
+      varying vec2 vTexCoord;
+
+      uniform sampler2D uSampler;
+      uniform float time;
+
+      vec3 crim = vec3(220.0, 20.0, 60.0);
+      vec3 turq = vec3(64.0, 224.0, 208.0);
+      vec3 crimC = crim / 255.0;
+      vec3 turqC = turq / 255.0;
+      vec3 diffCtoT = crim - turq;
+      vec3 diffTtoC = turq - crim;
+
+      vec3 cblue = vec3(0.0,128.0,128.0);
+      vec3 tomat = vec3(255.0,99.0,71.0);
+      vec3 cblueC = cblue / 255.0;
+      vec3 tomatC = tomat / 255.0;
+      vec3 diffBtoT = cblue - tomat;
+      vec3 diffTtoB = tomat - cblue;
+
+      vec3 gray = vec3(32.0,32.0,32.0);
+      vec3 gold = vec3(255.0,215.0,0.0);
+      vec3 grayC = gray / 255.0;
+      vec3 goldC = gold / 255.0;
+      vec3 diffGRtoGO = gray - gold;
+      vec3 diffGOtoGR = gold - gray;
+
+      void main(){
+        vec4 c = texture2D(uSampler,vec2(vTexCoord.s,vTexCoord.t));
+        vec4 finalColor = c;
+        if(c == vec4(crimC,1)){
+          float r = diffCtoT.x * (sin(time / 800.0) + 0.8);
+          float g = diffCtoT.y * (sin(time / 800.0) + 0.8);
+          float b = diffCtoT.z * (sin(time / 800.0) + 0.8);
+          r = (r + turq.x) / 255.0;
+          g = (g + turq.y) / 255.0;
+          b = (b + turq.z) / 255.0;
+
+          finalColor = vec4(r,g,b,1); 
+        }
+
+        if(c == vec4(turqC,1)){
+          float r = diffTtoC.x * (sin(time / 800.0) + 0.8);
+          float g = diffTtoC.y * (sin(time / 800.0) + 0.8);
+          float b = diffTtoC.z * (sin(time / 800.0) + 0.8);
+          r = (r + crim.x) / 255.0;
+          g = (g + crim.y) / 255.0;
+          b = (b + crim.z) / 255.0;
+
+          finalColor = vec4(r,g,b,1); 
+        }
+
+        if(c == vec4(cblueC,1)){
+          float r = diffBtoT.x * (sin(time / 500.0) + 0.8);
+          float g = diffBtoT.y * (sin(time / 500.0) + 0.8);
+          float b = diffBtoT.z * (sin(time / 500.0) + 0.8);
+          r = (r + tomat.x) / 255.0;
+          g = (g + tomat.y) / 255.0;
+          b = (b + tomat.z) / 255.0;
+
+          finalColor = vec4(r,g,b,1); 
+        }
+
+        if(c == vec4(tomatC,1)){
+          float r = diffTtoB.x * (sin(time / 500.0) + 0.8);
+          float g = diffTtoB.y * (sin(time / 500.0) + 0.8);
+          float b = diffTtoB.z * (sin(time / 500.0) + 0.8);
+          r = (r + cblue.x) / 255.0;
+          g = (g + cblue.y) / 255.0;
+          b = (b + cblue.z) / 255.0;
+
+          finalColor = vec4(r,g,b,1); 
+        }
+
+        if(c == vec4(grayC,1)){
+          float r = diffGRtoGO.x * (sin(time / 1000.0) + 0.8);
+          float g = diffGRtoGO.y * (sin(time / 1000.0) + 0.8);
+          float b = diffGRtoGO.z * (sin(time / 1000.0) + 0.8);
+          r = (r + gold.x) / 255.0;
+          g = (g + gold.y) / 255.0;
+          b = (b + gold.z) / 255.0;
+
+          finalColor = vec4(r,g,b,1); 
+        }
+
+        if(c == vec4(goldC,1)){
+          float r = diffGOtoGR.x * (sin(time / 1000.0) + 0.8);
+          float g = diffGOtoGR.y * (sin(time / 1000.0) + 0.8);
+          float b = diffGOtoGR.z * (sin(time / 1000.0) + 0.8);
+          r = (r + gray.x) / 255.0;
+          g = (g + gray.y) / 255.0;
+          b = (b + gray.z) / 255.0;
+
+          finalColor = vec4(r,g,b,1); 
+        }
+
+        // * sin(vTexCoord.s); //* (time / 600.0);
+        //finalColor.a = 1.;// * sin(t) * 0.5;
+        gl_FragColor = finalColor;// * (time * 0.5);
+      }
+  </script>
 </html>

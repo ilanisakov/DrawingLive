@@ -10,8 +10,7 @@ var gulp = require('gulp'),
 gulp.task( 'default', function() {
   
   var b = browserify({
-    entries:'./js/index.js',
-    transforms:['glslify']
+    entries:'./js/index.js'
   })
 
   // bundles files and
